@@ -16,8 +16,8 @@ import { pageBlocks } from '../lib/interlude/old-page';
 import { site } from '../config/site';
 
 // Settings
-const LEAVE = { duration: 1, ease: 'power2.inOut' }; // covering
-const ENTER = { duration: 1, ease: 'power2.out' }; // revealing
+const LEAVE = { duration: 0.6, ease: 'power1.inOut' }; // covering
+const ENTER = { duration: 0.8, ease: 'power4.out' }; // revealing
 const DRIFT = 100; // px the page moves as it goes and comes
 
 // The panel's shape (`clip-path: inset(top right bottom left)`), both ends
