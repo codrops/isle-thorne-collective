@@ -1,8 +1,8 @@
 # Isle Thorne Collective Astro Template
 
-A free furniture shop template for [Astro](https://astro.build), with content collections and [Tailwind CSS](https://tailwindcss.com): a home page, the shop with every collection, product pages, a cart, an about page and a journal. 
+A free furniture shop template for [Astro](https://astro.build), with content collections and [Tailwind CSS](https://tailwindcss.com): a home page, the shop with every collection, product pages, a cart, an about page and a journal.
 
-Based on a design by [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/), used with her permission. 
+Based on a design by [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/), used with her permission.
 
 Made by [Codrops](https://tympanus.net/codrops/).
 
