@@ -1,8 +1,14 @@
-# Isle Thorne Collective
+# Isle Thorne Collective Astro Template
 
-A free furniture shop template for [Astro](https://astro.build), with content collections and [Tailwind CSS](https://tailwindcss.com): a home page, the shop with every collection, product pages, a cart, an about page and a journal. Based on a design by [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/), used with her permission. Made by [Codrops](https://tympanus.net/codrops/).
+A free furniture shop template for [Astro](https://astro.build), with content collections and [Tailwind CSS](https://tailwindcss.com): a home page, the shop with every collection, product pages, a cart, an about page and a journal. 
+
+Based on a design by [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/), used with her permission. 
+
+Made by [Codrops](https://tympanus.net/codrops/).
 
 ![The home page: two lounge chairs in a dark studio, under the headline "Sustainable Design, Uncompromised Quality"](.github/preview.jpg)
+
+**[Demo](https://isle-thorne-collective.crnacura.workers.dev/) · [Article](https://tympanus.net/codrops/?p=123519)**
 
 It's a static site: no UI framework, no CMS, no backend. The content is Markdown and JSON in the repository, the cart lives in the browser, and checkout and the newsletter form are demos you can connect to real services (see [Going further](#going-further)). In the browser, [Lenis](https://lenis.darkroom.engineering) does the smooth scrolling and [Embla Carousel](https://www.embla-carousel.com) the home page's rows, and links between pages play a page transition, made with [Interlude](https://github.com/codrops/interlude) and [GSAP](https://gsap.com) (see [Page transitions](#page-transitions)).
 
