@@ -1,0 +1,46 @@
+---
+/**
+ * The newsletter form: a small panel above the footer, opened by its
+ * "Subscribe to Newsletter". Styled like the cart.
+ *
+ * It posts to the email provider set in `site.newsletter` (a new tab shows
+ * their confirmation). With no provider set, it says it's a demo instead.
+ * Its script is `src/scripts/pages/newsletter.ts`.
+ */
+import { site } from '../config/site';
+---
+
+<dialog
+  id="newsletter"
+  aria-labelledby="newsletter-title"
+  class="fixed inset-x-3 top-auto bottom-[34px] m-0 w-auto bg-transparent p-0 text-white lg:right-3 lg:left-auto lg:w-[500px]"
+>
+  <!-- `data-astro-reload`: the browser sends it, to a new tab, not Astro's client router. -->
+  <form
+    class="card flex flex-col gap-3 bg-black"
+    method="post"
+    action={site.newsletter.action || undefined}
+    target="_blank"
+    data-astro-reload
+    data-newsletter-form
+  >
+    <h2 id="newsletter-title">Newsletter</h2>
+    <p class="text-copy font-normal">
+      Be the first to discover new collections and stories from the studio, a few times a year.
+    </p>
+    <label class="flex flex-col gap-1">
+      Email address
+      <input
+        type="email"
+        name={site.newsletter.field}
+        required
+        autocomplete="email"
+        class="h-8 rounded-sm bg-white px-2 text-black"
+      />
+    </label>
+    <button type="submit" class="h-8 rounded-sm bg-brand">
+      Subscribe
+    </button>
+  </form>
+  <p class="card mt-1 bg-white text-black empty:hidden" role="status" data-newsletter-status></p>
+</dialog>

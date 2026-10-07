@@ -1,0 +1,88 @@
+---
+/**
+ * Home: the headline over a photo, each collection as a row of photos, a link
+ * to the whole shop, and the latest stories.
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArtDirectedImage from '../components/ArtDirectedImage.astro';
+import HeroPhoto from '../components/HeroPhoto.astro';
+import CollectionHeading from '../components/CollectionHeading.astro';
+import ProductRow from '../components/ProductRow.astro';
+import ArrowCircle from '../components/ArrowCircle.astro';
+import { site } from '../config/site';
+import { getCollectionsWithProducts } from '../lib/shop';
+import { getStories, storyUrl } from '../lib/journal';
+import collectionsPhoto from '../assets/home/collections.jpg';
+import collectionsPhotoMobile from '../assets/home/collections-mobile.jpg';
+
+// Settings
+const STORIES = 3; // stories in the journal section
+
+const collections = await getCollectionsWithProducts();
+const stories = (await getStories()).slice(0, STORIES);
+
+/** A card's height: the screen's, less the 4px gaps above and below it. */
+const screenCard = 'min-h-[calc(100svh-8px)]';
+---
+
+<BaseLayout header="light">
+  <HeroPhoto alt="Two sculptural lounge chairs in a dark studio, one in sage green leather">
+    <h1 class="absolute inset-x-3 top-1/2 -translate-y-1/2 text-title">{site.headline}</h1>
+  </HeroPhoto>
+
+  {collections.map(({ collection, products }) => (
+    <section class="card mx-1 mt-1 bg-paper" aria-labelledby={`${collection.id}-title`}>
+      <CollectionHeading
+        collection={collection}
+        count={products.length}
+        href={`/shop/#${collection.id}`}
+      />
+      <ProductRow collection={collection} products={products} class="mt-12 lg:mt-16" />
+    </section>
+  ))}
+
+  <a
+    href="/shop/"
+    class="relative mx-1 mt-1 block h-[calc(100svh-8px)] min-h-[30rem] overflow-hidden rounded-sm text-white"
+  >
+    <ArtDirectedImage
+      wide={collectionsPhoto}
+      tall={collectionsPhotoMobile}
+      alt="A dim showroom with a leather lounge chair, a glass coffee table and a glowing lamp"
+    />
+    <span class="absolute inset-x-2 top-1/2 flex -translate-y-1/2 items-center justify-between text-title">
+      All Collections
+      <ArrowCircle tone="light" />
+    </span>
+  </a>
+
+  <section
+    class:list={['card mx-1 mt-1 flex flex-col gap-12 bg-paper', screenCard]}
+    aria-labelledby="journal-title"
+  >
+    <h2 id="journal-title" class="text-title">
+      Journal
+    </h2>
+    <ul class="grid-site my-auto gap-y-3">
+      {stories.map((story) => (
+        <li class="col-span-2 lg:col-span-4">
+          <a href={storyUrl(story)} class="group grid grid-cols-2 gap-3">
+            <Image
+              src={story.data.cover}
+              alt={story.data.coverAlt}
+              widths={[240, 480]}
+              sizes="(width >= 64rem) 16vw, 45vw"
+              class="aspect-square size-full rounded-sm object-cover"
+            />
+            <span class="leading-[1.2] group-hover:underline">{story.data.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a href="/journal/" class="flex items-center justify-between text-title hover:underline">
+      All Stories
+      <ArrowCircle />
+    </a>
+  </section>
+</BaseLayout>

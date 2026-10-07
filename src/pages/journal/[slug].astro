@@ -1,0 +1,144 @@
+---
+/**
+ * A story: credits, photo, title and text (from its Markdown file), sharing
+ * links, and the other stories on a black card.
+ */
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/Badge.astro';
+import { site } from '../../config/site';
+import { formatMonth } from '../../lib/format';
+import { getStories, storyUrl, type Story } from '../../lib/journal';
+
+export const getStaticPaths = (async () => {
+  const stories = await getStories();
+  return stories.map((story) => ({
+    params: { slug: story.id },
+    props: { story, others: stories.filter((other) => other !== story) },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  story: Story;
+  /** The other stories, newest first. */
+  others: Story[];
+}
+
+const { story, others } = Astro.props;
+const { title, date, words, photo, cover, coverAlt, description } = story.data;
+const { Content } = await render(story);
+
+const url = new URL(storyUrl(story), Astro.site ?? Astro.url).href;
+const share = [
+  {
+    label: 'FB',
+    name: 'Facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+  },
+  {
+    label: 'PN',
+    name: 'Pinterest',
+    href: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(title)}`,
+  },
+  {
+    label: 'X',
+    name: 'X',
+    href: `https://x.com/intent/post?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+  },
+];
+
+/** Structured data for search engines: an article. */
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  datePublished: date.toISOString(),
+  author: { '@type': 'Person', name: words },
+  publisher: { '@type': 'Organization', name: site.name },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={{ src: cover, alt: coverAlt }}
+  ground="paper"
+  schema={schema}
+>
+  <article class="grid-site px-3 pt-16 lg:pt-20">
+    <!-- Credits: date first on phones, last (at the photo's right edge) from 1024px. -->
+    <p class="whitespace-nowrap lg:col-start-9 lg:row-start-1 lg:justify-self-end">
+      <time datetime={date.toISOString()}>{formatMonth(date)}</time>
+    </p>
+    <p class="lg:col-span-2 lg:col-start-4 lg:row-start-1">Words: {words}</p>
+    <p class="col-start-2 mt-2 lg:col-span-3 lg:col-start-6 lg:row-start-1 lg:mt-0">
+      Photo: {photo}
+    </p>
+
+    <Image
+      src={cover}
+      alt={coverAlt}
+      widths={[400, 800, 1024]}
+      sizes="(width >= 64rem) 50vw, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="col-span-2 mt-5 aspect-4/3 w-full rounded-sm object-cover lg:col-span-6 lg:col-start-4"
+    />
+
+    <!-- As wide as the photo above it, at most. -->
+    <h1 class="col-span-2 mt-5 text-heading lg:col-span-6 lg:col-start-4 lg:mt-6">{title}</h1>
+
+    <div class="article col-span-2 mt-8 lg:col-span-6 lg:col-start-4 lg:[--article-measure:calc((100%-60px)*5/6+48px)]">
+      <Content />
+    </div>
+
+    <ul
+      class="col-span-2 mt-12 flex gap-2 lg:col-span-6 lg:col-start-4 lg:mt-16"
+      aria-label="Share"
+    >
+      {share.map(({ label, name, href }) => (
+        <li>
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener"
+            aria-label={`Share on ${name} (opens in a new tab)`}
+          >
+            <Badge size={32}>{label}</Badge>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </article>
+
+  {others.length > 0 && (
+    <section class="card mx-1 mt-20 bg-black text-white lg:mt-20" aria-labelledby="more-stories">
+      <h2 id="more-stories" class="sr-only">
+        More stories
+      </h2>
+      <ul class="flex flex-col gap-6 lg:gap-3">
+        {others.map((other) => (
+          <li>
+            <a href={storyUrl(other)} class="group grid-site gap-y-2">
+              <p class="max-lg:order-3 lg:col-span-3">
+                <time datetime={other.data.date.toISOString()}>{formatMonth(other.data.date)}</time>
+              </p>
+              <Image
+                src={other.data.cover}
+                alt={other.data.coverAlt}
+                widths={[400, 800]}
+                sizes="(width >= 64rem) 25vw, 100vw"
+                class="col-span-2 aspect-square w-full rounded-sm object-cover max-lg:order-1 lg:col-span-3 lg:col-start-4"
+              />
+              <h3 class="col-span-2 text-heading group-hover:underline max-lg:order-2 lg:col-span-3 lg:col-start-7">
+                {other.data.title}
+              </h3>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BaseLayout>

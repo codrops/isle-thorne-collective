@@ -1,0 +1,24 @@
+---
+/**
+ * The first screen of the home page and of the 404: the hero photo across the
+ * whole screen, darkened on the left behind the text (as in the design). The
+ * page puts its own text in the slot, over the photo.
+ */
+import ArtDirectedImage from './ArtDirectedImage.astro';
+import hero from '../assets/home/hero.jpg';
+import heroMobile from '../assets/home/hero-mobile.jpg';
+
+interface Props {
+  /** Describes the photo; empty when it's decoration. */
+  alt: string;
+}
+
+const { alt } = Astro.props;
+---
+
+<section class="relative h-svh min-h-[30rem] overflow-hidden text-white">
+  <ArtDirectedImage wide={hero} tall={heroMobile} alt={alt} priority />
+  <!-- Darkens the left of the photo, behind the text (as in the design). -->
+  <div class="absolute inset-0 bg-linear-to-l from-transparent from-[34.5%] to-black/30 to-[62.7%] lg:from-[70.5%] lg:to-[83%]"></div>
+  <slot />
+</section>

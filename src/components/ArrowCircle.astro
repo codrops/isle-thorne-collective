@@ -1,0 +1,37 @@
+---
+/**
+ * The round arrow: at the end of "All Collections" and "All Stories", and on
+ * the product photos (`ProductGallery.astro`). Decorative: the link or button
+ * around it carries the words.
+ */
+interface Props {
+  /** `light`: white circle, black arrow (over photos). `dark`: the reverse. */
+  tone?: 'light' | 'dark';
+  direction?: 'left' | 'right';
+  class?: string;
+}
+
+const { tone = 'dark', direction = 'right', class: className } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 32 32"
+  width="32"
+  height="32"
+  aria-hidden="true"
+  class:list={[
+    'shrink-0',
+    tone === 'light' ? 'text-white' : 'text-black',
+    direction === 'left' && 'rotate-180',
+    className,
+  ]}
+>
+  <circle cx="16" cy="16" r="16" fill="currentColor"></circle>
+  <path
+    d="M10.667 16h10.666m-3.2-3.2 3.2 3.2-3.2 3.2"
+    fill="none"
+    stroke-width="1.5"
+    stroke-linecap="square"
+    class:list={tone === 'light' ? 'stroke-black' : 'stroke-white'}
+  ></path>
+</svg>

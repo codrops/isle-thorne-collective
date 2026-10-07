@@ -1,0 +1,153 @@
+/*
+ * Design tokens and base styles. Everything else is Tailwind classes in the
+ * components. Values come from the design (Paper file "Isle Thorne Collective").
+ */
+@import 'tailwindcss';
+
+@theme {
+  /* Colours */
+  --color-paper: #f8f7f3; /* cards, and the ground of product and story pages */
+  --color-brand: #790700; /* footer, buttons, the journal's and about page's cards */
+  --color-brand-deep: #6b0200; /* the about page's ground, behind its red cards */
+
+  /*
+   * Type: one family, five sizes. Labels are the design's default: 14px,
+   * semibold, set solid. `--text-*--line-height` and `--letter-spacing` make
+   * each size a complete style, so `text-label` alone sets all three.
+   */
+  --text-label: 0.875rem; /* 14px: nav, labels, prices */
+  --text-label--line-height: 1;
+  --text-copy: 0.875rem; /* 14px: short paragraphs (about, product details) */
+  --text-copy--line-height: 1.2;
+  --text-copy--letter-spacing: -0.01em;
+  --text-body: 1rem; /* 16px: articles */
+  --text-body--line-height: 1.4;
+  --text-body--letter-spacing: 0.01em;
+  --text-title: 1.25rem; /* 20px: the hero line, section titles, the menu */
+  --text-title--line-height: 1.2;
+  --text-title--letter-spacing: -0.01em;
+  --text-heading: 1.5rem; /* 24px: page and story titles */
+  --text-heading--line-height: 1.2;
+}
+
+/* Astro's Fonts API defines `--font-instrument-sans` (with its metric-matched
+   fallback), so it's referenced inline rather than copied. */
+@theme inline {
+  --font-sans: var(--font-instrument-sans);
+}
+
+/* Page transitions (Interlude). The cover between two pages: black, like the
+   design's loading screen. The colours some transitions read, from the site's
+   own: `--red` (velvet, ink, frame, corner, spiral's glow), `--color-accent`
+   (dissolve's rim, particles, the loader), `--color-bg` (particles). */
+:root {
+  --interlude-color: #000;
+  --red: var(--color-brand);
+  --color-accent: var(--color-brand);
+  --color-bg: var(--color-paper);
+}
+
+/*
+ * The site grid: 2 columns on phones, 12 from 1024px, 12px apart. Pages and
+ * cards place their content on it, so labels line up across the page (the nav
+ * links, the piece counts and the article text all start on column 4).
+ */
+@utility grid-site {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: --spacing(3);
+
+  @media (width >= 64rem) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+/* Small text links and buttons (the header's, the footer's): taller to the
+   touch than they look, at least 24px, without moving anything. */
+@utility tap {
+  display: inline-block;
+  padding-block: 5px;
+  margin-block: -5px;
+}
+
+/* A card: the design's sections are rounded panels, 4px from the screen's
+   edges and from each other, with 8px inside. */
+@utility card {
+  border-radius: var(--radius-sm);
+  padding: --spacing(2);
+}
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-label font-semibold text-black antialiased;
+    /* The design never fakes bold or italic: the font has both. */
+    font-synthesis: none;
+    /* Some page transitions (`wipe`) move the page sideways: never let that
+       scroll it sideways, or show a scrollbar. */
+    overflow-x: clip;
+  }
+
+  /* Visible focus on everything, in the text's own colour. */
+  :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  /* <details> summaries are styled as buttons: no triangle. */
+  summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* While the menu or the cart is open, the page behind it doesn't scroll. */
+  html:has(dialog[open]:modal) {
+    overflow: hidden;
+  }
+
+  /* Dialogs (cart, menu) are positioned by their own classes. */
+  dialog {
+    max-width: none;
+    max-height: none;
+  }
+  dialog::backdrop {
+    background: transparent;
+  }
+}
+
+/* Horizontal rows of images: thin, quiet scrollbars, since the rows scroll
+   sideways (by touch, trackpad, Shift + wheel, or by tabbing to a link). */
+@utility scroll-row {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0 0 0 / 0.2) transparent;
+
+  & > * {
+    scroll-snap-align: start;
+  }
+}
+
+/* A story's text, rendered from Markdown (see `src/pages/journal/[slug].astro`). */
+@layer components {
+  .article {
+    @apply text-body font-normal;
+
+    /* Like the design: paragraphs follow on without a gap. */
+    & p {
+      max-width: var(--article-measure, none);
+    }
+
+    & blockquote {
+      @apply my-10 text-title font-semibold italic;
+    }
+
+    & a {
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+  }
+}

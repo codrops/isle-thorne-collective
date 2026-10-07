@@ -1,0 +1,40 @@
+---
+/**
+ * The shop: every collection with all its products, as a grid of photos.
+ * Each collection has an anchor (`/shop/#lunar-glow-lamps`), used by the home page.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionHeading from '../../components/CollectionHeading.astro';
+import ProductTile from '../../components/ProductTile.astro';
+import { getCollectionsWithProducts, productTitle } from '../../lib/shop';
+
+const collections = await getCollectionsWithProducts();
+---
+
+<BaseLayout
+  title="Shop"
+  description="Explore our four collections: lounge seats, lamps, coffee tables and armchairs, each crafted with meticulous care."
+>
+  <h1 class="px-3 pt-16 text-heading lg:pt-20">Collections, Index</h1>
+
+  {collections.map(({ collection, products }) => (
+    <section
+      id={collection.id}
+      class="card mx-1 mt-3 scroll-mt-1 bg-paper"
+      aria-labelledby={`${collection.id}-title`}
+    >
+      <CollectionHeading collection={collection} count={products.length} />
+      <ul class="grid-site mt-12 gap-y-3 lg:mt-16">
+        {products.map((product) => (
+          <li class="lg:col-span-3">
+            <ProductTile
+              product={product}
+              title={productTitle(product, collection)}
+              sizes="(width >= 64rem) 25vw, 50vw"
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>

@@ -1,0 +1,115 @@
+---
+/**
+ * The cart: a panel under the header's "Cart (n)", on every page. It's empty
+ * in the HTML and filled in the browser from localStorage
+ * (`src/scripts/cart.ts`, started by `src/scripts/pages/cart.ts`), using the
+ * catalogue below for names, prices and photos. Each line is a copy of the
+ * <template>.
+ */
+import { getImage } from 'astro:assets';
+import type { CartProduct } from '../lib/cart';
+import { getCollectionsWithProducts, productUrl } from '../lib/shop';
+
+// Every product, with a small square photo for the cart (twice its 100px, for sharp screens).
+const catalog: Record<string, CartProduct> = {};
+for (const { collection, products } of await getCollectionsWithProducts()) {
+  for (const product of products) {
+    const thumbnail = await getImage({
+      src: product.data.images[0].src,
+      width: 200,
+      height: 200,
+      fit: 'cover',
+    });
+    catalog[product.id] = {
+      title: collection.data.singular,
+      number: product.data.number,
+      price: product.data.price,
+      href: productUrl(product),
+      image: thumbnail.src,
+    };
+  }
+}
+---
+
+<!--
+  Never taller than the screen (below the header, 4px from the bottom): a long
+  cart scrolls inside, natively (`data-lenis-prevent`, see src/scripts/smooth-scroll.ts).
+-->
+<dialog
+  id="cart"
+  aria-labelledby="cart-title"
+  class="fixed inset-x-3 top-[34px] m-0 max-h-[calc(100svh-38px)] w-auto overflow-y-auto overscroll-contain bg-transparent p-0 text-white lg:right-3 lg:left-auto lg:w-[500px]"
+  data-lenis-prevent
+>
+  <h2 id="cart-title" class="sr-only">
+    Cart
+  </h2>
+  <!--
+    For keyboards: shown only while focused from the keyboard (Escape and
+    clicking outside close the cart too). Laid over the panel, so showing and
+    hiding it never moves the lines under the pointer.
+  -->
+  <button
+    type="button"
+    class="sr-only z-10 rounded-sm bg-white p-2 text-black focus-visible:not-sr-only focus-visible:absolute focus-visible:top-2 focus-visible:right-10"
+    data-cart-close
+  >
+    Close cart
+  </button>
+
+  <ul class="flex flex-col gap-1" data-cart-lines></ul>
+  <p class="card bg-black" data-cart-empty>
+    Your cart is empty.
+  </p>
+
+  <!-- One or the other, depending on whether the cart has anything in it. -->
+  <button type="button" class="mt-1 h-8 w-full rounded-sm bg-brand" data-cart-checkout hidden>
+    Checkout
+  </button>
+  <a
+    href="/shop/"
+    class="mt-1 flex h-8 items-center justify-center rounded-sm bg-brand"
+    data-cart-shop
+  >
+    Visit the shop
+  </a>
+  <!-- Messages for everyone, screen readers included: "Added", the checkout note. -->
+  <p class="card mt-1 bg-white text-black empty:hidden" role="status" data-cart-status></p>
+
+  <template data-cart-line>
+    <li class="relative flex gap-3 rounded-sm bg-black p-2">
+      <img
+        src=""
+        alt=""
+        width="100"
+        height="100"
+        class="size-16 rounded-sm bg-paper object-cover lg:size-[100px]"
+        data-line-image
+      />
+      <!-- Two columns, 176px and the rest, as in the design: name and number, quantity and price. -->
+      <div class="grid flex-1 grid-cols-[minmax(0,11rem)_1fr] content-between gap-x-3">
+        <a href="" class="hover:underline" data-line-title></a>
+        <span data-line-number></span>
+        <span data-line-quantity></span>
+        <span class="whitespace-nowrap" data-line-price></span>
+      </div>
+      <button
+        type="button"
+        class="absolute top-1 right-1 flex size-6 items-center justify-center"
+        data-line-remove
+      >
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+          <path
+            d="M11.333 4.667 4.667 11.333m0-6.666 6.666 6.666"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="square"
+          ></path>
+        </svg>
+      </button>
+    </li>
+  </template>
+
+  <script is:inline type="application/json" data-cart-catalog set:html={JSON.stringify(catalog)} />
+</dialog>

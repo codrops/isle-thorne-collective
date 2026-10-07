@@ -1,0 +1,43 @@
+---
+/**
+ * A full-bleed photo with a different crop for phones: a landscape file from
+ * 1024px, a portrait one below. Astro's <Picture> serves one image in several
+ * formats; switching images by screen size needs a <source media> of our own.
+ */
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+
+interface Props {
+  /** Landscape, from 1024px. */
+  wide: ImageMetadata;
+  /** Portrait, below 1024px. */
+  tall: ImageMetadata;
+  alt: string;
+  /** The first photo on the page: load it right away, before anything else. */
+  priority?: boolean;
+  class?: string;
+}
+
+const { wide, tall, alt, priority = false, class: className } = Astro.props;
+
+const [desktop, mobile] = await Promise.all([
+  getImage({ src: wide, widths: [960, 1376] }),
+  getImage({ src: tall, widths: [480, 768] }),
+]);
+---
+
+<picture>
+  <source media="(width < 64rem)" srcset={mobile.srcSet.attribute} sizes="100vw" />
+  <img
+    src={desktop.src}
+    srcset={desktop.srcSet.attribute}
+    sizes="100vw"
+    alt={alt}
+    width={desktop.attributes.width}
+    height={desktop.attributes.height}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    decoding="async"
+    class:list={['size-full object-cover', className]}
+  />
+</picture>

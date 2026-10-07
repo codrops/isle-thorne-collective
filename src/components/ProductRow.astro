@@ -1,0 +1,42 @@
+---
+/**
+ * A collection's photos on the home page: an endless row to drag, with momentum
+ * (`src/scripts/carousel.ts`, started by `src/scripts/pages/carousels.ts`).
+ * 583px photos at 1440px (5 grid columns), 300px on phones, 12px apart.
+ *
+ * The space between photos is padding inside each slide, not a CSS gap: the
+ * carousel measures slides, so where the row wraps around, the last photo
+ * keeps its space before the first.
+ */
+import ProductTile from './ProductTile.astro';
+import { productTitle, type Collection, type Product } from '../lib/shop';
+
+interface Props {
+  collection: Collection;
+  products: Product[];
+  class?: string;
+}
+
+const { collection, products, class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    'scroll-row data-ready:cursor-grab data-ready:overflow-hidden data-ready:active:cursor-grabbing',
+    className,
+  ]}
+  data-carousel
+>
+  <!-- `touch-pan-y`: on touch screens, vertical swipes still scroll the page. -->
+  <ul class="flex touch-pan-y touch-pinch-zoom">
+    {products.map((product) => (
+      <li class="w-[312px] flex-none pr-3 lg:w-[calc((100%-132px)*5/12+60px)]">
+        <ProductTile
+          product={product}
+          title={productTitle(product, collection)}
+          sizes="(width >= 64rem) 40vw, 300px"
+        />
+      </li>
+    ))}
+  </ul>
+</div>

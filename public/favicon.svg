@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The collection badge: a red circle with an "I". -->
+  <circle cx="16" cy="16" r="16" fill="#790700" />
+  <path d="M14.5 9h3v14h-3z" fill="#fff" />
+</svg>

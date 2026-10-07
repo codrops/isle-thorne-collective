@@ -1,0 +1,25 @@
+---
+/**
+ * A number (or short label) in a black circle: collection numbers, and the
+ * share buttons on stories.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'span'> {
+  /** 24px next to labels, 32px next to headings. */
+  size?: 24 | 32;
+}
+
+const { size = 24, class: className, ...attributes } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-flex shrink-0 items-center justify-center rounded-full bg-black text-white',
+    size === 24 ? 'size-6' : 'size-8',
+    className,
+  ]}
+  {...attributes}
+>
+  <slot />
+</span>

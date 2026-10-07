@@ -1,0 +1,64 @@
+---
+/**
+ * The journal: the latest story on a red card, then every story.
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { formatMonth } from '../../lib/format';
+import { getStories, storyUrl, storyYears } from '../../lib/journal';
+
+const stories = await getStories();
+const [latest] = stories;
+---
+
+<BaseLayout
+  title="Journal"
+  description="Stories from the studio: the materials, inspirations and craftsmanship behind each of our pieces."
+  header="light"
+>
+  <h1 class="sr-only">Journal</h1>
+
+  {latest && (
+    <section class="card m-1 bg-brand pt-15 text-white lg:pt-19" aria-label="Latest story">
+      <a href={storyUrl(latest)} class="group grid-site gap-y-2">
+        <p class="max-lg:order-3 max-lg:mt-10 lg:col-span-3">Latest Story</p>
+        <Image
+          src={latest.data.cover}
+          alt={latest.data.coverAlt}
+          widths={[400, 800]}
+          sizes="(width >= 64rem) 25vw, 100vw"
+          loading="eager"
+          class="col-span-2 aspect-square w-full rounded-sm object-cover max-lg:order-1 lg:col-span-3 lg:col-start-4"
+        />
+        <h2 class="col-span-2 text-heading group-hover:underline max-lg:order-2 lg:col-span-3 lg:col-start-7">
+          {latest.data.title}
+        </h2>
+        <p class="text-right max-lg:order-4 max-lg:mt-10 lg:col-span-3 lg:col-start-10">
+          <time datetime={latest.data.date.toISOString()}>{formatMonth(latest.data.date)}</time>
+        </p>
+      </a>
+    </section>
+  )}
+
+  <section class="card mx-1 bg-paper pb-8" aria-labelledby="archive">
+    <h2 id="archive" class="text-heading leading-none">
+      {storyYears(stories)}
+    </h2>
+    <ul class="grid-site mt-12 gap-y-3 lg:mt-16 lg:gap-y-20">
+      {stories.map((story) => (
+        <li class="col-span-2 lg:col-span-4">
+          <a href={storyUrl(story)} class="group grid grid-cols-2 gap-3">
+            <Image
+              src={story.data.cover}
+              alt={story.data.coverAlt}
+              widths={[240, 480]}
+              sizes="(width >= 64rem) 16vw, 45vw"
+              class="aspect-square w-full rounded-sm object-cover"
+            />
+            <span class="leading-[1.2] group-hover:underline">{story.data.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

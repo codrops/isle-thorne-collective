@@ -1,0 +1,89 @@
+---
+/**
+ * The site's header: name, navigation and cart, over the top of the page.
+ * On phones the navigation moves into the menu (`Menu.astro`).
+ */
+import { site } from '../config/site';
+import { CART_KEY } from '../lib/cart';
+import Menu from './Menu.astro';
+
+interface Props {
+  /** `light` over photos and dark grounds (white text), `dark` elsewhere. */
+  tone?: 'light' | 'dark';
+}
+
+const { tone = 'dark' } = Astro.props;
+const path = Astro.url.pathname;
+
+/** `page` on the link's own page, `true` on the pages below it (a product, a story). */
+const current = (href: string) =>
+  path === href ? 'page' : path.startsWith(href) ? ('true' as const) : undefined;
+---
+
+<header
+  class:list={['absolute inset-x-0 top-0 z-10 p-3', tone === 'light' ? 'text-white' : 'text-black']}
+>
+  <div class="grid-site items-center">
+    <a href="/" class="tap lg:col-span-3">
+      {site.name}
+    </a>
+
+    <nav aria-label="Main" class="max-lg:hidden lg:col-span-6 lg:col-start-4">
+      {site.nav.map((item, index) => (
+        <>
+          <a
+            href={item.href}
+            aria-current={current(item.href)}
+            class="tap [&[aria-current]]:italic"
+          >
+            {item.label}
+          </a>
+          {index < site.nav.length - 1 && ', '}
+        </>
+      ))}
+    </nav>
+
+    <div class="flex justify-between lg:col-span-3 lg:col-start-10 lg:justify-end">
+      <button
+        type="button"
+        class="tap lg:hidden"
+        aria-haspopup="dialog"
+        aria-controls="menu"
+        aria-expanded="false"
+        data-menu-open
+      >
+        Menu
+      </button>
+      <!-- Italic while the cart is open, as in the design. -->
+      <button
+        type="button"
+        class="tap aria-expanded:italic"
+        aria-haspopup="dialog"
+        aria-controls="cart"
+        aria-expanded="false"
+        data-cart-open
+      >
+        Cart (<span data-cart-count>0</span>)
+      </button>
+    </div>
+  </div>
+  <!--
+    Sets the cart count before the page is painted, so it doesn't flash "0"
+    first: on the first page, and on each next one as soon as it's swapped in
+    (Astro's client router runs this script once per visit). The rest of the
+    cart starts later (src/scripts/cart.ts).
+  -->
+  <script is:inline define:vars={{ key: CART_KEY }}>
+    const paint = () => {
+      try {
+        const lines = JSON.parse(localStorage.getItem(key) ?? '[]');
+        const count = lines.reduce((sum, line) => sum + (line.quantity || 0), 0);
+        for (const el of document.querySelectorAll('[data-cart-count]')) el.textContent = count;
+      } catch {}
+    };
+    paint();
+    document.addEventListener('astro:after-swap', paint);
+  </script>
+</header>
+
+<Menu />

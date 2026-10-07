@@ -1,0 +1,59 @@
+---
+/**
+ * About: the studio's story, its collaborations and its press, on red cards.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { about } from '../data/about';
+
+/** The text column: column 4 onwards from 1024px, like the header's links. */
+const column = 'lg:col-span-4 lg:col-start-4';
+---
+
+<BaseLayout
+  title="About"
+  description="Since 1991, an exquisite legacy in bespoke furniture: our story, our collaborations and our press."
+  ground="deep"
+  header="light"
+  footer="black"
+>
+  <h1 class="sr-only">About</h1>
+  <div class="m-1 flex flex-col gap-1 text-white">
+    <section class="card grid-site bg-brand pt-12 pb-4" aria-label="Our story">
+      <div class:list={['col-span-2 flex flex-col text-copy font-normal', column]}>
+        {about.intro.map((paragraph) => (
+          <p>{paragraph}</p>
+        ))}
+      </div>
+    </section>
+
+    <section
+      class="card grid-site content-start bg-brand pb-8 lg:min-h-96"
+      aria-labelledby="collaborations"
+    >
+      <h2 id="collaborations" class:list={['col-span-2', column]}>
+        Collaborations
+      </h2>
+      <ul class:list={['col-span-2 mt-8 text-copy font-normal', column]}>
+        {about.collaborations.map(({ studio, work, year }) => (
+          <li>
+            {studio} “{work}”, {year}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section
+      class="card grid-site content-start bg-brand pb-8 lg:min-h-[44rem]"
+      aria-labelledby="press"
+    >
+      <h2 id="press" class:list={['col-span-2', column]}>
+        Press
+      </h2>
+      <ul class:list={['col-span-2 mt-8 text-copy font-normal', column]}>
+        {about.press.map((mention) => (
+          <li>{mention}</li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

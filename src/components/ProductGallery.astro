@@ -1,0 +1,120 @@
+---
+/**
+ * A product's photos. On phones they're stacked, one under the other. From
+ * 1024px they're a slideshow: one big photo, and the small pictures in a row
+ * beside it (all the photos, the one showing dimmed).
+ *
+ * The big photo is split into two invisible halves, buttons for the previous
+ * and the next photo; hovering (or tabbing to) one shows its arrow, centred in
+ * it. The slideshow wraps around. The ← and → keys work too, while focus is in
+ * the photos or the small pictures.
+ *
+ * It renders two blocks, placed on the product page's grid by `class` and
+ * `thumbsClass`. Without JavaScript, the first photo shows and the small
+ * pictures are plain pictures: the buttons are only switched on by the script,
+ * `src/scripts/pages/gallery.ts`.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import ArrowCircle from './ArrowCircle.astro';
+
+interface Props {
+  images: { src: ImageMetadata; alt: string }[];
+  /** Classes for the photos' block (the big photo, from 1024px). */
+  class?: string;
+  /** Classes for the small pictures' row. */
+  thumbsClass?: string;
+}
+
+// Settings
+const FADE = 'lg:duration-400'; // the crossfade between photos (a Tailwind duration)
+const ARROW = 'duration-200'; // the arrows coming in and out
+
+const { images, class: className, thumbsClass } = Astro.props;
+const slideshow = images.length > 1;
+
+/** From 1024px, the small pictures are 3 grid columns wide (345px at 1440px). */
+const thumbWidth = 'w-[calc((100vw-156px)/4+24px)]';
+---
+
+<div
+  class:list={['relative flex flex-col gap-3 lg:block', className]}
+  data-gallery={slideshow ? '' : undefined}
+>
+  {images.map((image, index) => (
+    <Image
+      src={image.src}
+      alt={image.alt}
+      widths={[400, 800, 1024]}
+      sizes="(width >= 64rem) 57vw, 100vw"
+      loading={index === 0 ? 'eager' : 'lazy'}
+      fetchpriority={index === 0 ? 'high' : 'auto'}
+      data-gallery-slide
+      data-current={index === 0 ? '' : undefined}
+      class:list={[
+        'aspect-square w-full rounded-sm object-cover',
+        // From 1024px: stacked in one place, only the current one visible.
+        'lg:absolute lg:inset-0 lg:aspect-auto lg:h-full lg:opacity-0 lg:transition-opacity lg:data-current:opacity-100',
+        FADE,
+      ]}
+    />
+  ))}
+
+  {slideshow && (
+    <>
+      {(['previous', 'next'] as const).map((direction) => (
+        <button
+          type="button"
+          class:list={[
+            'group absolute inset-y-0 z-1 hidden w-1/2 cursor-pointer items-center justify-center outline-none lg:flex',
+            direction === 'previous' ? 'left-0' : 'right-0',
+          ]}
+          aria-label={direction === 'previous' ? 'Previous photo' : 'Next photo'}
+          data-gallery-step={direction === 'previous' ? -1 : 1}
+          hidden
+        >
+          <!-- Fades in and slides a little towards where it points; only fades with reduced motion. -->
+          <span
+            class:list={[
+              'rounded-full opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-white motion-reduce:translate-x-0',
+              direction === 'previous' ? 'translate-x-1' : '-translate-x-1',
+              ARROW,
+            ]}
+          >
+            <ArrowCircle tone="light" direction={direction === 'previous' ? 'left' : 'right'} />
+          </span>
+        </button>
+      ))}
+      <!-- Says which photo is showing, for screen readers. -->
+      <p class="sr-only" aria-live="polite" data-gallery-status />
+    </>
+  )}
+</div>
+
+{slideshow && (
+  <ul
+    class:list={['-mr-3 flex gap-3 pr-3 scroll-row max-lg:hidden', thumbsClass]}
+    aria-label="Photos"
+    data-gallery-thumbs
+  >
+    {images.map((image, index) => (
+      <li class:list={['flex-none', thumbWidth]}>
+        <button
+          type="button"
+          class="block w-full transition-opacity aria-[current=true]:opacity-40"
+          aria-label={`Show photo ${index + 1} of ${images.length}`}
+          aria-current={index === 0 ? 'true' : undefined}
+          disabled
+        >
+          <Image
+            src={image.src}
+            alt=""
+            widths={[400, 800]}
+            sizes="25vw"
+            class="aspect-square w-full rounded-sm object-cover"
+          />
+        </button>
+      </li>
+    ))}
+  </ul>
+)}

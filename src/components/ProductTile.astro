@@ -1,0 +1,40 @@
+---
+/**
+ * A product's photo as a link to its page: the home page's rows and the
+ * shop's grid. The design shows photos only, so the name is there for screen
+ * readers (and as the link's name), not on screen.
+ */
+import { Image } from 'astro:assets';
+import type { Product } from '../lib/shop';
+import { productUrl } from '../lib/shop';
+
+interface Props {
+  product: Product;
+  /** The product's full name: "Elysian Lounge Seat No. 7". */
+  title: string;
+  /** How wide the photo shows, for the browser to pick a file (`sizes`). */
+  sizes: string;
+  class?: string;
+}
+
+const { product, title, sizes, class: className } = Astro.props;
+---
+
+<a
+  href={productUrl(product)}
+  class:list={[
+    // `relative`: the hidden name is positioned inside the tile, so it scrolls
+    // (and is clipped) with the row instead of widening the page.
+    'relative block aspect-square overflow-hidden rounded-sm bg-white',
+    className,
+  ]}
+>
+  <Image
+    src={product.data.images[0].src}
+    alt=""
+    widths={[300, 600, 900, 1024]}
+    sizes={sizes}
+    class="size-full object-cover"
+  />
+  <span class="sr-only">{title}</span>
+</a>

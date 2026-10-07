@@ -1,0 +1,28 @@
+---
+/**
+ * Page not found: the home page's first screen, with a way back to the shop.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroPhoto from '../components/HeroPhoto.astro';
+import ArrowCircle from '../components/ArrowCircle.astro';
+---
+
+<BaseLayout title="Page not found" noindex header="light">
+  <HeroPhoto alt="">
+    <!-- On phones the text sits higher, on the dark wall, clear of the chair. -->
+    <div class="absolute inset-x-3 top-[36%] -translate-y-1/2 lg:top-1/2">
+      <p class="text-label">404</p>
+      <h1 class="mt-3 text-title">Page not found</h1>
+      <p class="mt-3 max-w-xs text-copy font-normal">
+        This page has moved, or never existed. Everything we make is in the shop.
+      </p>
+    </div>
+    <a
+      href="/shop/"
+      class="absolute inset-x-3 bottom-3 flex items-center justify-between text-title hover:underline"
+    >
+      Back to the shop
+      <ArrowCircle tone="light" />
+    </a>
+  </HeroPhoto>
+</BaseLayout>

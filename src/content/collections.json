@@ -1,0 +1,34 @@
+[
+  {
+    "id": "elysian-lounge-seats",
+    "name": "Elysian Lounge Seats",
+    "singular": "Elysian Lounge Seat",
+    "order": 1,
+    "materials": "Steel, Leather, Plastic, Oak Wood",
+    "process": "Each shell is pressed from fine layers of oak veneer in a heated mould, then sanded and oiled by hand to reveal the natural beauty of the grain. The leather is cut from whole hides, stitched with care in our workshop and fitted over frames of bent steel, polished to a mirror-like finish."
+  },
+  {
+    "id": "lunar-glow-lamps",
+    "name": "Lunar Glow Lamps",
+    "singular": "Lunar Glow Lamp",
+    "order": 2,
+    "materials": "Steel, Glass, Ceramics",
+    "process": "Every steel element is spun, folded and brushed by hand; the glass is mouth-blown, and the ceramic bodies are thrown, glazed and fired twice, so each lamp carries the subtle marks of its making. Each one is wired, tested and fitted with a warm, dimmable light."
+  },
+  {
+    "id": "tranquil-coffee-tables",
+    "name": "Tranquil Coffee Tables",
+    "singular": "Tranquil Coffee Table",
+    "order": 3,
+    "materials": "Glass",
+    "process": "Every top is cut from tempered glass and patiently polished along its edge until it turns perfectly clear. The bases are cast, turned or bent one at a time and finished by hand, so that no two pieces are ever quite the same."
+  },
+  {
+    "id": "crescent-edge-armchairs",
+    "name": "Crescent Edge Armchairs",
+    "singular": "Crescent Edge Armchair",
+    "order": 4,
+    "materials": "Steel, Leather, Plastic, Oak Wood",
+    "process": "The curved backs are bent from solid oak or moulded in a single piece, then joined to frames of steel or wood with meticulous care. Each seat is upholstered in our workshop with natural fillings and the finest full-grain leathers and suedes."
+  }
+]

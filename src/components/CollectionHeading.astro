@@ -1,0 +1,37 @@
+---
+/**
+ * A collection's heading row, at the top of its card: number, name, piece
+ * count and materials (from 1024px). On the site grid, so the counts line up
+ * with the header's links.
+ */
+import Badge from './Badge.astro';
+import { pieces, type Collection } from '../lib/shop';
+
+interface Props {
+  collection: Collection;
+  /** How many products it has (counted from the content). */
+  count: number;
+  /** Where the name links to, if anywhere (the home page links to the shop). */
+  href?: string;
+}
+
+const { collection, count, href } = Astro.props;
+const { name, order, materials } = collection.data;
+---
+
+<!-- Phones: name left, count right. From 1024px: on the grid, materials added. -->
+<div class="flex items-center justify-between gap-3 lg:grid-site">
+  <!-- The id names the collection's section (`aria-labelledby`). -->
+  <h2 id={`${collection.id}-title`} class="flex items-center gap-2 lg:col-span-3">
+    <Badge aria-hidden="true">{order}</Badge>
+    {href ? (
+      <a href={href} class="tap hover:underline">
+        {name}
+      </a>
+    ) : (
+      name
+    )}
+  </h2>
+  <p class="shrink-0 lg:col-start-4">{pieces(count)}</p>
+  <p class="max-lg:hidden lg:col-span-5 lg:col-start-6">{materials}</p>
+</div>

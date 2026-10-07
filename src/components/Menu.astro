@@ -1,0 +1,39 @@
+---
+/**
+ * The menu on phones: a black screen with the navigation, opened by the
+ * header's "Menu" button. A modal <dialog>: it keeps focus inside, the page
+ * behind can't be reached, and Escape closes it. Its script is
+ * `src/scripts/pages/menu.ts`.
+ */
+import { site } from '../config/site';
+---
+
+<dialog
+  id="menu"
+  aria-label="Menu"
+  class="fixed inset-0 m-0 size-full bg-black p-3 text-white backdrop:bg-black lg:hidden"
+>
+  <div class="grid-site items-center">
+    <a href="/" class="tap">
+      {site.name}
+    </a>
+    <div class="flex justify-between">
+      <button type="button" class="tap" aria-label="Close menu" data-menu-close>
+        Menu
+      </button>
+      <button type="button" class="tap" aria-haspopup="dialog" aria-controls="cart" data-cart-open>
+        Cart (<span data-cart-count>0</span>)
+      </button>
+    </div>
+  </div>
+  <nav aria-label="Menu" class="absolute inset-x-3 top-1/2 -translate-y-1/2 text-title">
+    {site.nav.map((item, index) => (
+      <>
+        <a href={item.href} class="tap">
+          {item.label}
+        </a>
+        {index < site.nav.length - 1 && ', '}
+      </>
+    ))}
+  </nav>
+</dialog>

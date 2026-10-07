@@ -1,0 +1,77 @@
+---
+/**
+ * The one layout: document head, header, cart, content and footer. Each page
+ * picks its ground and the header's and footer's tones, as in the design.
+ *
+ * Links between pages play a page transition (Interlude, on Astro's client
+ * router): `<Interlude />` is the layer they draw in.
+ */
+import type { ComponentProps } from 'astro/types';
+import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+import Seo from '../components/Seo.astro';
+import Interlude from '../components/Interlude.astro';
+import Loader from '../components/Loader.astro';
+import Header from '../components/Header.astro';
+import Cart from '../components/Cart.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props extends ComponentProps<typeof Seo> {
+  /** The page's background: white, paper (products, stories) or deep red (about). */
+  ground?: 'white' | 'paper' | 'deep';
+  /** White header text over photos and red grounds. */
+  header?: ComponentProps<typeof Header>['tone'];
+  /** The footer's colour: red, or black on the red about page. */
+  footer?: ComponentProps<typeof Footer>['tone'];
+  /**
+   * The page has a bar fixed to the bottom of the screen (product pages):
+   * leave room for it below the footer, so it never hides it.
+   */
+  bottomBar?: boolean;
+}
+
+const {
+  ground = 'white',
+  header = 'dark',
+  footer = 'brand',
+  bottomBar = false,
+  ...seo
+} = Astro.props;
+const grounds = { white: 'bg-white', paper: 'bg-paper', deep: 'bg-brand-deep' };
+---
+
+<!doctype html>
+<!-- Astro's own view transition animations are off: Interlude does the animating. -->
+<html lang="en" transition:animate="none">
+  <head>
+    <Seo {...seo} />
+    <Font cssVariable="--font-instrument-sans" preload={[{ style: 'normal' }]} />
+    <ClientRouter />
+  </head>
+  <!-- The bar is 104px tall on phones (3 rows), 32px from 1024px, 4px from the edge. -->
+  <body class:list={['flex min-h-svh flex-col', grounds[ground], bottomBar && 'pb-27 lg:pb-9']}>
+    <a
+      href="#main"
+      class="sr-only z-30 rounded-sm bg-black p-2 text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      Skip to content
+    </a>
+    <Interlude />
+    <Header tone={header} />
+    <!-- Takes focus after each page transition (`tabindex`), for keyboards and screen readers. -->
+    <main id="main" tabindex="-1" class="relative flex-1 focus:outline-none">
+      <slot />
+    </main>
+    <!-- Fixed to the screen, so outside `<main>`: a transition moves `<main>`, and a fixed element inside it would move too. -->
+    <slot name="fixed" />
+    <Footer tone={footer} />
+    <Cart />
+    <!-- A loader at the pointer while a slow page loads, for some transitions. -->
+    <Loader />
+    <!-- Smooth scrolling: a design choice. Remove to scroll natively. -->
+    <script>
+      import '../scripts/smooth-scroll';
+    </script>
+  </body>
+</html>

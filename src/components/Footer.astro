@@ -1,0 +1,39 @@
+---
+/**
+ * The footer: a red bar (black on the red about page). "Subscribe to
+ * Newsletter" opens the newsletter form (`Newsletter.astro`).
+ */
+import { site } from '../config/site';
+import Newsletter from './Newsletter.astro';
+
+interface Props {
+  tone?: 'brand' | 'black';
+}
+
+const { tone = 'brand' } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer
+  class:list={[
+    'card m-1 flex flex-wrap items-center gap-x-8 gap-y-2 text-white lg:grid-site',
+    tone === 'brand' ? 'bg-brand' : 'bg-black',
+  ]}
+>
+  <p class="lg:col-span-2">©{year}</p>
+  <a href={site.social.href} class="tap lg:col-span-2 lg:col-start-3">
+    {site.social.label}
+  </a>
+  <button
+    type="button"
+    class="tap ml-auto aria-expanded:italic lg:col-span-3 lg:col-start-10 lg:justify-self-end"
+    aria-haspopup="dialog"
+    aria-controls="newsletter"
+    aria-expanded="false"
+    data-newsletter-open
+  >
+    Subscribe to Newsletter
+  </button>
+</footer>
+
+<Newsletter />
