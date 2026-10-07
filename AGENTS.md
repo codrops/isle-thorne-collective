@@ -20,7 +20,7 @@ Isle Thorne Collective: a furniture shop template in Astro 7, with content colle
 
 ## Releasing
 
-This is a free template by Codrops, designed by Elena Smirnova (README credits, `LICENSE`: MIT). Keep it static and simple: services (CMS, newsletter, checkout) are documented in the README's "Going further", not built in. The brand and everything around it (collaborators, press) are invented; never name real companies as clients or press. The brand's texts (products, collections, stories, about, shipping) follow the voice of Elena's own copy in the design: elegant and evocative, a few full sentences. The template's own texts (README, code comments, demo notes) stay plain. Keep the README current with every change.
+This is a free template by Codrops, based on a design by Elena Smirnova, used with her permission (README credits, `LICENSE`: MIT). Keep it static and simple: services (CMS, newsletter, checkout) are documented in the README's "Going further", not built in. The brand and everything around it (collaborators, press) are invented; never name real companies as clients or press. The brand's texts (products, collections, stories, about, shipping) follow the voice of Elena's own copy in the design: elegant and evocative, a few full sentences. The template's own texts (README, code comments, demo notes) stay plain. Keep the README current with every change.
 
 ## Development
 

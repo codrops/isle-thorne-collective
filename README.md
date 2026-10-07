@@ -1,6 +1,6 @@
 # Isle Thorne Collective
 
-A free furniture shop template for [Astro](https://astro.build), with content collections and [Tailwind CSS](https://tailwindcss.com): a home page, the shop with every collection, product pages, a cart, an about page and a journal. Designed by [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/) for [Codrops](https://tympanus.net/codrops/).
+A free furniture shop template for [Astro](https://astro.build), with content collections and [Tailwind CSS](https://tailwindcss.com): a home page, the shop with every collection, product pages, a cart, an about page and a journal. Based on a design by [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/), used with her permission. Made by [Codrops](https://tympanus.net/codrops/).
 
 ![The home page: two lounge chairs in a dark studio, under the headline "Sustainable Design, Uncompromised Quality"](.github/preview.jpg)
 
@@ -114,7 +114,7 @@ During a page transition the page can't be clicked, focused or scrolled. Then fo
 
 ## Credits
 
-- Design: [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/), for [Codrops](https://tympanus.net/codrops/).
+- Design: [Elena Smirnova](https://tympanus.net/codrops/author/elenasmirnova/), used with her permission.
 - Font: [Instrument Sans](https://fonts.google.com/specimen/Instrument+Sans), under the SIL Open Font License.
 - Page transitions: [Interlude](https://github.com/codrops/interlude), by Codrops, with [GSAP](https://gsap.com) and [three.js](https://threejs.org). Some of its transitions are inspired by other sites: `peel` by the page turn on [eminente.art](https://eminente.art/), `stack` by the project pages on [Olga Prudka's site](https://olgaprudka.com/), `frame` by the page transition on [Benoît Marzouvanlian's site](https://www.benmarzouvanlian.com/), `corner` by [a post by Oli](https://x.com/olvhrs/status/1899756396897333632) on X, and `typewriter` by the type animation of The Manifest, by Studio Freight, shared by [Lídia Santos](https://www.linkedin.com/posts/inventorylidia_too-often-in-the-creative-world-we-see-the-activity-7431778963980443648-jglF).
 - Photos: generated for this template with AI (Google's Nano Banana model, in [Paper](https://paper.design)). They're stand-ins: replace them with your own. The studio, its products, collaborators and press are invented.
