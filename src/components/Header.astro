@@ -43,7 +43,15 @@ const current = (href: string) =>
       ))}
     </nav>
 
-    <div class="flex justify-between lg:col-span-3 lg:col-start-10 lg:justify-end">
+    <div class="flex justify-between lg:col-span-3 lg:col-start-10 lg:justify-end lg:gap-6">
+      {site.template && (
+        <p class="max-lg:hidden">
+          A free Astro{' '}
+          <a href={site.template} class="tap underline">
+            template
+          </a>
+        </p>
+      )}
       <button
         type="button"
         class="tap lg:hidden"

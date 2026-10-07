@@ -1,9 +1,10 @@
 ---
 /**
  * The menu on phones: a black screen with the navigation, opened by the
- * header's "Menu" button. A modal <dialog>: it keeps focus inside, the page
- * behind can't be reached, and Escape closes it. Its script is
- * `src/scripts/pages/menu.ts`.
+ * header's "Menu" button. A <dialog>, but not a modal one, so a page transition
+ * can play over it: its script (`src/scripts/pages/menu.ts`) keeps the page
+ * behind out of reach and closes it with Escape. Above the header, below the
+ * transition's layer (`z-20`).
  */
 import { site } from '../config/site';
 ---
@@ -11,7 +12,7 @@ import { site } from '../config/site';
 <dialog
   id="menu"
   aria-label="Menu"
-  class="fixed inset-0 m-0 size-full bg-black p-3 text-white backdrop:bg-black lg:hidden"
+  class="fixed inset-0 z-20 m-0 size-full bg-black p-3 text-white lg:hidden"
 >
   <div class="grid-site items-center">
     <a href="/" class="tap">
@@ -36,4 +37,12 @@ import { site } from '../config/site';
       </>
     ))}
   </nav>
+  {site.template && (
+    <p class="absolute inset-x-3 bottom-3">
+      A free Astro{' '}
+      <a href={site.template} class="tap underline">
+        template
+      </a>
+    </p>
+  )}
 </dialog>

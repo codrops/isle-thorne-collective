@@ -32,7 +32,7 @@ let lenis: Lenis | null = null;
 let transitioning = Boolean(layer && layer.dataset.state !== 'idle');
 
 /** Whether the cart or the menu is open. */
-const modalOpen = () => document.querySelector('dialog:modal') !== null;
+const modalOpen = () => document.querySelector('dialog:modal, #menu[open]') !== null;
 
 /** Scrolls, unless a dialog is open or a transition is running. */
 function refresh() {

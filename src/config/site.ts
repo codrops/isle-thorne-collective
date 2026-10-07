@@ -20,6 +20,12 @@ export const site = {
     { label: 'Journal', href: '/journal/' },
   ],
 
+  /**
+   * The header's "A free Astro template" (in the phone menu, at the bottom),
+   * its last word linking here. Empty: no note.
+   */
+  template: 'https://github.com/codrops/isle-thorne-collective',
+
   /** The footer's social link. Replace the URL with your own account. */
   social: { label: '@itc.furniture', href: 'https://www.instagram.com/' },
 
